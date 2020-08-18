@@ -33,10 +33,18 @@ public class Server extends Thread {
     return this.activeUsers.get(username);
   }
 
+  /**
+   * Adds a move to an active game
+   * @param move String move that will be added to the moveList
+   */
   public void saveMove(String move) {
     this.activeGame.add(move);
   }
 
+  /**
+   * Processes a takeback request, acceptance, or denial
+   * @param i
+   */
   public void processTakeBack(Instruction i) {
     switch (i.getPayload()) {
       case ("accept"):
@@ -59,6 +67,10 @@ public class Server extends Thread {
    */
   public void retrieveGame(Instruction i) {}
 
+  /**
+   * Sends Current game to both Clients in case of reset
+   * @param i Instruction to be processed
+   */
   public void sendCurrentGame(Instruction i) {
     ServerThread destination = this.activeUsers.get(i.getTarget());
     ServerThread origin = this.activeUsers.get(i.getUser());
@@ -68,6 +80,10 @@ public class Server extends Thread {
     }
   }
 
+  /**
+   * Saves game to database
+   * @param i Instruction to be processed
+   */
   public void saveGame(Instruction i) {
 
   }

@@ -39,6 +39,9 @@ public class Client {
         }
     }
 
+    /**
+     * This method awaits Instruction from the server
+     */
     public void receiveMsg() {
         Thread awaitInput = new Thread(() -> {
             try {
@@ -55,6 +58,10 @@ public class Client {
         awaitInput.start();
     }
 
+    /**
+     * This Takes a received instruction and applies the operation requested
+     * @param instruction The instruction to be acted upon
+     */
     public void processInstruction(Instruction instruction) {
         String op = instruction.getOperation();
         String user = instruction.getUser();
@@ -73,6 +80,10 @@ public class Client {
         }
     }
 
+    /**
+     * This sends a given instruction to the server
+     * @param i Instruction to be sent
+     */
     public void sendInstruction(Instruction i) {
         try {
             this.sendOut
