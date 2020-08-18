@@ -52,7 +52,6 @@ public class Instruction {
         String[] content = build.toString().split("\\|");
         return new Instruction(content[0], content[1], content[2], content[3]);
       }
-
     } catch (IOException e) {
       e.printStackTrace();
     }

@@ -21,8 +21,6 @@ public class ServerThread extends Thread {
   @Override
   public void run() {
     try {
-      Instruction initialize = Instruction.parseStream(socket.getInputStream());
-      initializeThread(initialize);
       boolean online = true;
       while (online) {
         try {
@@ -68,6 +66,10 @@ public class ServerThread extends Thread {
           this.server.retrieveGame(instruction);
           break;
         case ("savegame"):
+          this.server.saveGame(instruction);
+          break;
+        case ("initialize"):
+          initializeThread(instruction);
           break;
       }
     } catch (IOException e) {

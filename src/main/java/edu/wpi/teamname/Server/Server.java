@@ -63,7 +63,13 @@ public class Server extends Thread {
     ServerThread destination = this.activeUsers.get(i.getTarget());
     ServerThread origin = this.activeUsers.get(i.getUser());
 
-    for (int count = 0; count < activeGame.size() - 1; count++) {}
+    for (int count = 0; count < activeGame.size() - 1; count++) {
+
+    }
+  }
+
+  public void saveGame(Instruction i) {
+
   }
 
   /** Thread which accepts new connections to the server */
@@ -74,7 +80,6 @@ public class Server extends Thread {
         Socket connection = getSocket().accept();
         System.out.println("Welcome to the server: " + connection.getInetAddress());
         ServerThread clientConnection = new ServerThread(this, connection);
-        this.activeUsers.put("temp", clientConnection);
         clientConnection.start();
       }
     } catch (IOException e) {
