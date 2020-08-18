@@ -23,17 +23,20 @@ public class MatchScreenController {
 
   /**
    * Initializes chat, board, moves list, and controls of match screen
+   *
    * @throws IOException when FXML file is not found
    */
   public void initialize() throws IOException {
     matchBoardController = (MatchBoardController) loadComponent(pn_board, "MatchBoard.fxml");
     matchChatController = (MatchChatController) loadComponent(pn_chat, "MatchChat.fxml");
     matchMovesController = (MatchMovesController) loadComponent(pn_moves, "MatchMoves.fxml");
-    matchControlsController = (MatchControlsController) loadComponent(pn_controls, "MatchControls.fxml");
+    matchControlsController =
+        (MatchControlsController) loadComponent(pn_controls, "MatchControls.fxml");
   }
 
   /**
    * Loads FXML file into appropriate pane and returns controller
+   *
    * @param host pane hosting the FXML
    * @param path FXML file path
    * @return controller of the FXML
