@@ -29,7 +29,7 @@ public class App extends Application {
     this.primaryStage.setTitle("Exciting Chess");
     // Load game board
     // TODO create path
-    switchScene("views/match/MatchBoard.fxml");
+    switchScene("views/match/MatchScreen.fxml");
   }
 
   public void switchScene(String path) throws IOException {
