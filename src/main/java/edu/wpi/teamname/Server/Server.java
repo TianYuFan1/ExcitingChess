@@ -1,8 +1,14 @@
 package edu.wpi.teamname.Server;
 
+import edu.wpi.teamname.Database.Database;
+
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,6 +16,7 @@ public class Server extends Thread {
   private ServerSocket socket;
   private HashMap<String, ServerThread> activeUsers;
   private ArrayList<String> activeGame;
+  private Database database;
 
   public Server(HashMap<String, ServerThread> activeUsers, ServerSocket socket) {
     this.activeUsers = activeUsers;
@@ -85,13 +92,16 @@ public class Server extends Thread {
    * @param i Instruction to be processed
    */
   public void saveGame(Instruction i) {
-
+    this.database.saveGame(this.activeGame, i);
+    this.activeGame = new ArrayList<>();
   }
 
   /** Thread which accepts new connections to the server */
   @Override
   public void run() {
     try {
+      initializeDB();
+      this.database.initTables();
       while (true) {
         Socket connection = getSocket().accept();
         System.out.println("Welcome to the server: " + connection.getInetAddress());
@@ -102,6 +112,22 @@ public class Server extends Thread {
       e.printStackTrace();
     }
   }
+
+  public void initializeDB () {
+    Connection c = null;
+    try {
+      Class.forName("org.postgresql.Driver");
+      c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/chessdb",
+              "patrick", "PASSWORD");
+      Database database = new Database (c);
+      this.database = database;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return;
+    }
+  }
+
+
 
   /**
    * Starts the server
