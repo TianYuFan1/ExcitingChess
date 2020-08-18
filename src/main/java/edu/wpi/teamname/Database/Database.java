@@ -14,6 +14,9 @@ public class Database {
         this.connection = connection;
     }
 
+    /**
+     * Initializes table, does not insert any info
+     */
     public void initTables() {
         Statement statement = null;
         try {
@@ -59,6 +62,11 @@ public class Database {
         }
     }
 
+    /**
+     * Saves the current game in the server Buffer
+     * @param moveList ArrayList<String>
+     * @param instruction Instruction
+     */
     public void saveGame(ArrayList<String> moveList, Instruction instruction) {
         try {
             String gameID = produceGameID(instruction);
@@ -80,6 +88,11 @@ public class Database {
         }
     }
 
+    /**
+     * Produces a game ID given an instruction, used to query or save games
+     * @param i Instruction
+     * @return String Game ID
+     */
     public String produceGameID(Instruction i) {
         StringBuilder sr = new StringBuilder();
         sr.append(i.getUser() + i.getTarget());

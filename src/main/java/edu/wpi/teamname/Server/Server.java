@@ -113,6 +113,9 @@ public class Server extends Thread {
     }
   }
 
+  /**
+   * Begins the DB connection and saves it for later use
+   */
   public void initializeDB () {
     Connection c = null;
     try {
