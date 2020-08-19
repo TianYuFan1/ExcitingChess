@@ -1,5 +1,6 @@
 package edu.wpi.teamname.views.match.components;
 
+import edu.wpi.teamname.models.match.board.pieces.Bishop;
 import edu.wpi.teamname.views.match.MatchController;
 import edu.wpi.teamname.views.match.MatchScreenController;
 import javafx.fxml.FXML;
@@ -23,6 +24,7 @@ public class MatchBoardController implements MatchController {
 
   public void initialize() {
     createBase();
+    createPieces();
   }
 
   public void createBase() {
@@ -48,19 +50,19 @@ public class MatchBoardController implements MatchController {
     }
     // Create row numbers
     if (col == 0) {
-      tile.getChildren().add(createRowLabel(row, pos));
+      tile.getChildren().add(createLabel(Integer.toString(row + 1), 5, 112, pos));
     }
     if (row == 0) {
-      tile.getChildren().add(createColumnLabel(col, pos));
+      tile.getChildren().add(createLabel(String.valueOf((char) (col + 65)), 117, 5, pos));
     }
     return tile;
   }
 
-  public Label createRowLabel(int row, int pos) {
-    Label label = new Label(Integer.toString(row));
+  public Label createLabel(String text, int x, int y, int pos) {
+    Label label = new Label(text);
     label.setStyle("-fx-font-size: 14;");
-    label.setLayoutX(5);
-    label.setLayoutY(112);
+    label.setLayoutX(x);
+    label.setLayoutY(y);
     if (pos == 0) {
       label.setTextFill(Color.web(darkColor));
     } else {
@@ -69,16 +71,7 @@ public class MatchBoardController implements MatchController {
     return label;
   }
 
-  public Label createColumnLabel(int col, int pos) {
-    Label label = new Label(String.valueOf((char) (col + 65)));
-    label.setStyle("-fx-font-size: 14;");
-    label.setLayoutX(117);
-    label.setLayoutY(5);
-    if (pos == 0) {
-      label.setTextFill(Color.web(darkColor));
-    } else {
-      label.setTextFill(Color.web(lightColor));
-    }
-    return label;
+  public void createPieces() {
+    gp_board.add(new Bishop("white").getImage(), 0, 0);
   }
 }
