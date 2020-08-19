@@ -39,6 +39,7 @@ public class ServerThread extends Thread {
 
   /**
    * Special initialize instruction which ties the username to the server thread
+   *
    * @param instruction Instruction to be processed
    */
   public void initializeThread(Instruction instruction) {
@@ -49,6 +50,7 @@ public class ServerThread extends Thread {
 
   /**
    * This method processes a given Instruction and applies the correct operation
+   *
    * @param instruction Instruction to be processed
    */
   public void processInstruction(Instruction instruction) {
@@ -87,6 +89,7 @@ public class ServerThread extends Thread {
 
   /**
    * Sends an Instruction to the Client associated with the thread this is invoked on
+   *
    * @param i Instruction to be sent
    */
   public void sendInstruction(Instruction i) {
