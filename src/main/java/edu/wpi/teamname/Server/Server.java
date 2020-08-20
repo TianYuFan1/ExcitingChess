@@ -1,15 +1,22 @@
 package edu.wpi.teamname.Server;
 
+import edu.wpi.teamname.Database.Database;
+import edu.wpi.teamname.Instruction.Instruction;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 public class Server extends Thread {
   private ServerSocket socket;
   private HashMap<String, ServerThread> activeUsers;
   private ArrayList<String> activeGame;
+  private Database database;
 
   public Server(HashMap<String, ServerThread> activeUsers, ServerSocket socket) {
     this.activeUsers = activeUsers;
@@ -35,6 +42,7 @@ public class Server extends Thread {
 
   /**
    * Adds a move to an active game
+   *
    * @param move String move that will be added to the moveList
    */
   public void saveMove(String move) {
@@ -43,13 +51,14 @@ public class Server extends Thread {
 
   /**
    * Processes a takeback request, acceptance, or denial
+   *
    * @param i
    */
   public void processTakeBack(Instruction i) {
     switch (i.getPayload()) {
       case ("accept"):
         this.activeGame.remove(activeGame.size() - 1);
-        this.activeGame.remove(activeGame.size() - 2);
+        this.activeGame.remove(activeGame.size() - 1);
         sendCurrentGame(i);
         break;
       case ("request"):
@@ -65,33 +74,44 @@ public class Server extends Thread {
    *
    * @param i
    */
-  public void retrieveGame(Instruction i) {}
+  public void retrieveGame(Instruction i) {
+
+  }
 
   /**
-   * Sends Current game to both Clients in case of reset
+   * Sends Current game to both Clients in case of reset SEND ALL AT ONCE
+   *
    * @param i Instruction to be processed
    */
   public void sendCurrentGame(Instruction i) {
     ServerThread destination = this.activeUsers.get(i.getTarget());
     ServerThread origin = this.activeUsers.get(i.getUser());
-
-    for (int count = 0; count < activeGame.size() - 1; count++) {
-
+    StringBuilder moves = new StringBuilder();
+    for (int count = 0; count < activeGame.size(); count++) {
+      moves.append(activeGame.get(count));
+      moves.append(activeGame.get('*'));
     }
+    Instruction instruction = new Instruction("loadgame", "server", "client", moves.toString());
+    destination.sendInstruction(instruction);
+    origin.sendInstruction(instruction);
   }
 
   /**
    * Saves game to database
+   *
    * @param i Instruction to be processed
    */
   public void saveGame(Instruction i) {
-
+    this.database.saveGame(this.activeGame, i);
+    this.activeGame = new ArrayList<>();
   }
 
   /** Thread which accepts new connections to the server */
   @Override
   public void run() {
     try {
+      initializeDB();
+      this.database.initTables();
       while (true) {
         Socket connection = getSocket().accept();
         System.out.println("Welcome to the server: " + connection.getInetAddress());
@@ -100,6 +120,22 @@ public class Server extends Thread {
       }
     } catch (IOException e) {
       e.printStackTrace();
+    }
+  }
+
+  /** Begins the DB connection and saves it for later use */
+  public void initializeDB() {
+    Connection c = null;
+    try {
+      Class.forName("org.postgresql.Driver");
+      c =
+          DriverManager.getConnection(
+              "jdbc:postgresql://localhost:5432/chessdb", "patrick", "PASSWORD");
+      Database database = new Database(c);
+      this.database = database;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return;
     }
   }
 
