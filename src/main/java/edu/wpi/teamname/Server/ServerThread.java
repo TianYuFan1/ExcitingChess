@@ -1,7 +1,6 @@
 package edu.wpi.teamname.Server;
 
 import edu.wpi.teamname.Instruction.Instruction;
-
 import java.io.IOException;
 import java.net.Socket;
 
@@ -99,7 +98,14 @@ public class ServerThread extends Thread {
       this.getSocket()
           .getOutputStream()
           .write(
-              (i.getOperation() + '|' + i.getUser() + '|' + i.getTarget() + '|' + i.getPayload() + '\0')
+              (i.getOperation()
+                      + '|'
+                      + i.getUser()
+                      + '|'
+                      + i.getTarget()
+                      + '|'
+                      + i.getPayload()
+                      + '\0')
                   .getBytes());
     } catch (IOException e) {
       e.printStackTrace();

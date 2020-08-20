@@ -2,15 +2,14 @@ package edu.wpi.teamname.Server;
 
 import edu.wpi.teamname.Database.Database;
 import edu.wpi.teamname.Instruction.Instruction;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-
 
 public class Server extends Thread {
   private ServerSocket socket;
@@ -52,14 +51,16 @@ public class Server extends Thread {
   /**
    * Processes a takeback request, acceptance, or denial
    *
-   * @param i
+   * @param i Instruction
    */
   public void processTakeBack(Instruction i) {
     switch (i.getPayload()) {
       case ("accept"):
+        String lastMove = this.activeGame.get(activeGame.size() - 1);
         this.activeGame.remove(activeGame.size() - 1);
+        String firstMove = this.activeGame.get(activeGame.size() - 1);
         this.activeGame.remove(activeGame.size() - 1);
-        sendCurrentGame(i);
+        undoMove(lastMove, firstMove, i);
         break;
       case ("request"):
         this.activeUsers.get(i.getTarget()).sendInstruction(i);
@@ -70,12 +71,42 @@ public class Server extends Thread {
   }
 
   /**
+   * Sends an instruction List to a user List
+   *
+   * @param users String
+   * @param instructions Instruction
+   */
+  public void sendInstructions(ArrayList<String> users, ArrayList<Instruction> instructions) {
+    for (String user : users) {
+      for (Instruction instruction : instructions) {
+        this.activeUsers.get(user).sendInstruction(instruction);
+      }
+    }
+  }
+
+  /**
+   * Undos 2 given moves
+   *
+   * @param last String Last move made
+   * @param first String first move made
+   * @param i Instruction
+   */
+  public void undoMove(String last, String first, Instruction i) {
+    ArrayList<String> users = new ArrayList<>(Arrays.asList(i.getUser(), i.getTarget()));
+    Instruction undoLastMove = new Instruction("undo", "", "", last);
+    Instruction undoFirstMove = new Instruction("undo", "", "", first);
+    ArrayList<Instruction> instructions =
+        new ArrayList<>(Arrays.asList(undoLastMove, undoFirstMove));
+    sendInstructions(users, instructions);
+  }
+
+  /**
    * Stub until DB is implemented
    *
    * @param i
    */
   public void retrieveGame(Instruction i) {
-
+    this.database.retrieveGame(i.getPayload());
   }
 
   /**
@@ -83,7 +114,7 @@ public class Server extends Thread {
    *
    * @param i Instruction to be processed
    */
-  public void sendCurrentGame(Instruction i) {
+  public void sendPastGame(Instruction i) {
     ServerThread destination = this.activeUsers.get(i.getTarget());
     ServerThread origin = this.activeUsers.get(i.getUser());
     StringBuilder moves = new StringBuilder();
@@ -110,8 +141,8 @@ public class Server extends Thread {
   @Override
   public void run() {
     try {
-      initializeDB();
-      this.database.initTables();
+      // initializeDB();
+      // this.database.initTables();
       while (true) {
         Socket connection = getSocket().accept();
         System.out.println("Welcome to the server: " + connection.getInetAddress());

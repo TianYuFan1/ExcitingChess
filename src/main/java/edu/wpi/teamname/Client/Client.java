@@ -1,7 +1,6 @@
 package edu.wpi.teamname.Client;
 
 import edu.wpi.teamname.Instruction.Instruction;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -72,30 +71,34 @@ public class Client {
     String payload = instruction.getPayload();
     switch (op) {
       case ("move"):
-
         break;
       case ("takeback"):
         // TODO Apply Redo method
         break;
-      case ("viewgame"):
-        /*
-        Want to distinguish between a loaded game for view and a loaded game to play
-         */
-        parseMoves(payload);
-        break;
       case ("loadgame"):
         parseMoves(payload);
+        break;
+      case ("undo"):
+        undoMove(payload);
         break;
     }
   }
 
   /**
-   * Turns a String of form move*move*move*move*...move*
-   * into an ArrayList of form move, move, move
+   * Reaches into controller to reverse a given move
+   *
+   * @param payload String
+   */
+  public void undoMove(String payload) {}
+
+  /**
+   * Turns a String of form move*move*move*move*...move* into an ArrayList of form move, move,
+   * move... move
+   *
    * @param moves String
    * @return ArrayList
    */
-  public ArrayList<String> parseMoves (String moves) {
+  public ArrayList<String> parseMoves(String moves) {
     ArrayList<String> moveList = new ArrayList<>();
     StringBuilder sr = new StringBuilder();
     for (int i = 0; i < moves.length(); i++) {
@@ -103,8 +106,7 @@ public class Client {
       if (currChar == '*') {
         moveList.add(sr.toString());
         sr = new StringBuilder();
-      }
-      else sr.append(currChar);
+      } else sr.append(currChar);
     }
     return moveList;
   }

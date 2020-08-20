@@ -1,7 +1,6 @@
 package edu.wpi.teamname.Database;
 
 import edu.wpi.teamname.Instruction.Instruction;
-
 import java.sql.*;
 import java.util.*;
 
@@ -33,7 +32,7 @@ public class Database {
       return false;
     }
     try {
-      //TODO Consider gameID's being white/black blind
+      // TODO Consider gameID's being white/black blind
       statement.execute(
           ""
               + "CREATE TABLE games ("
@@ -71,8 +70,7 @@ public class Database {
     try {
       String gameID = produceGameID(instruction);
       PreparedStatement insertGame =
-          connection.prepareStatement("INSERT INTO games " +
-                  "VALUES (?,?,?,?, CURRENT DATE)");
+          connection.prepareStatement("INSERT INTO games " + "VALUES (?,?,?,?, CURRENT DATE)");
       insertGame.setString(1, gameID);
       insertGame.setString(2, instruction.getUser());
       insertGame.setString(3, instruction.getTarget());
@@ -94,12 +92,12 @@ public class Database {
     try {
       String gameID = produceGameID(instruction);
       PreparedStatement insertMoves =
-              connection.prepareStatement(
-                      "INSERT INTO moves " +
-                              "(moveNumber, gameID, whiteMove, blackMove) " +
-                              "VALUES (?,?,?,?)");
+          connection.prepareStatement(
+              "INSERT INTO moves "
+                  + "(moveNumber, gameID, whiteMove, blackMove) "
+                  + "VALUES (?,?,?,?)");
       for (int i = 0; i < moveList.size(); i += 2) {
-        //TODO Make sure moves go 1,2,3,4...
+        // TODO Make sure moves go 1,2,3,4...
         insertMoves.setInt(1, i / 2);
         insertMoves.setString(2, gameID);
         insertMoves.setString(3, moveList.get(i));
@@ -130,20 +128,19 @@ public class Database {
    *
    * @param x String
    * @param y String
-   *
    * @return ArrayList of game info
    */
   public ArrayList<String> retrieveGameSet(String x, String y) {
     ArrayList<String> gameSet = new ArrayList<>();
     try {
       PreparedStatement retrieveGames =
-              connection.prepareStatement(
-                      ""
-                              + "SELECT * "
-                              + "FROM  games "
-                              + "WHERE white = ? AND black = ? "
-                              + "OR "
-                              + "black = ? and white = ?");
+          connection.prepareStatement(
+              ""
+                  + "SELECT * "
+                  + "FROM  games "
+                  + "WHERE white = ? AND black = ? "
+                  + "OR "
+                  + "black = ? and white = ?");
       retrieveGames.setString(1, x);
       retrieveGames.setString(2, y);
       retrieveGames.setString(3, x);
@@ -164,19 +161,20 @@ public class Database {
 
   /**
    * Pulls count of games played between two people for storage consistency
+   *
    * @param i Instruction
    * @return integer
    */
-  public int retrieveGameCount (Instruction i) {
+  public int retrieveGameCount(Instruction i) {
     try {
       PreparedStatement selectGameCount =
-              connection.prepareStatement(
-                      ""
-                              + "SELECT COUNT(white) AS number "
-                              + "FROM  games "
-                              + "WHERE white = ? AND black = ? "
-                              + "OR "
-                              + "black = ? and white = ?");
+          connection.prepareStatement(
+              ""
+                  + "SELECT COUNT(white) AS number "
+                  + "FROM  games "
+                  + "WHERE white = ? AND black = ? "
+                  + "OR "
+                  + "black = ? and white = ?");
       selectGameCount.setString(1, i.getUser());
       selectGameCount.setString(2, i.getTarget());
       selectGameCount.setString(3, i.getUser());
@@ -191,18 +189,15 @@ public class Database {
 
   /**
    * Pulls a specific game by gameID
+   *
    * @param gameID String gameID you want
    * @return ArrayList of game info
    */
-  public ArrayList<String> retrieveGame (String gameID) {
+  public ArrayList<String> retrieveGame(String gameID) {
     ArrayList<String> game = new ArrayList<>();
     try {
       PreparedStatement retrieveGame =
-              connection.prepareStatement(
-                      ""
-                              + "SELECT * "
-                              + "FROM  games "
-                              + "WHERE gameID = ?");
+          connection.prepareStatement("" + "SELECT * " + "FROM  games " + "WHERE gameID = ?");
       retrieveGame.setString(1, gameID);
       ResultSet rs = retrieveGame.executeQuery();
       game.add(rs.getString("gameID"));
@@ -215,6 +210,4 @@ public class Database {
     }
     return game;
   }
-
-
 }
