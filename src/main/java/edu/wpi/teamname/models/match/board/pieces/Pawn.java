@@ -13,7 +13,7 @@ public class Pawn extends Piece {
   }
 
   public void setupMoves() {
-    super.shortMove = new ArrayList<>(Arrays.asList(new int[]{0, 1}, new int[]{0, 2}));
+    super.shortMove = new ArrayList<>(Arrays.asList(new int[] {-1, 0}, new int[] {-2, 0}));
     super.longMove = new ArrayList<>();
   }
 }

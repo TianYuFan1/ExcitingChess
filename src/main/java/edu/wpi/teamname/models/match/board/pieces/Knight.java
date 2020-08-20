@@ -14,7 +14,17 @@ public class Knight extends Piece {
   }
 
   public void setupMoves() {
-    super.shortMove = new ArrayList<>(Arrays.asList(new int[]{1, 2}, new int[]{2, 1}, new int[]{-1, 2}, new int[]{2, -1}, new int[]{1, -2}, new int[]{-2, 1}, new int[]{-1, -2}, new int[]{-2, -1}));
+    super.shortMove =
+        new ArrayList<>(
+            Arrays.asList(
+                new int[] {1, 2},
+                new int[] {2, 1},
+                new int[] {-1, 2},
+                new int[] {2, -1},
+                new int[] {1, -2},
+                new int[] {-2, 1},
+                new int[] {-1, -2},
+                new int[] {-2, -1}));
     super.longMove = new ArrayList<>();
   }
 }

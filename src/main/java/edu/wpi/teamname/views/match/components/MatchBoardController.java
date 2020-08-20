@@ -27,7 +27,7 @@ public class MatchBoardController implements MatchController {
   }
 
   public void createBase() {
-    tiles = new TileGrid();
+    tiles = new TileGrid(this);
     for (int col = 0; col < 8; col++) {
       for (int row = 0; row < 8; row++) {
         gp_board.add(tiles.addTile(row, col), col, row);
@@ -50,5 +50,4 @@ public class MatchBoardController implements MatchController {
   public PieceSet getPieces() {
     return this.pieces;
   }
-
 }

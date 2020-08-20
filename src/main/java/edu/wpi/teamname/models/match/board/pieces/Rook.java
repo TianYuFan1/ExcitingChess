@@ -14,6 +14,9 @@ public class Rook extends Piece {
 
   public void setupMoves() {
     super.shortMove = new ArrayList<>();
-    super.longMove = new ArrayList<>(Arrays.asList(new int[]{0, 1}, new int[]{0, -1}, new int[]{1, 0}, new int[]{-1, 0}));
+    super.longMove =
+        new ArrayList<>(
+            Arrays.asList(
+                new int[] {0, 1}, new int[] {0, -1}, new int[] {1, 0}, new int[] {-1, 0}));
   }
 }

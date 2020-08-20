@@ -13,7 +13,17 @@ public class King extends Piece {
   }
 
   public void setupMoves() {
-    super.shortMove = new ArrayList<>(Arrays.asList(new int[]{-1, 1}, new int[]{1, 1}, new int[]{1, -1}, new int[]{-1, -1}, new int[]{-1, 0}, new int[]{1, 0}, new int[]{0, 1}, new int[]{0, -1}));
+    super.shortMove =
+        new ArrayList<>(
+            Arrays.asList(
+                new int[] {-1, 1},
+                new int[] {1, 1},
+                new int[] {1, -1},
+                new int[] {-1, -1},
+                new int[] {-1, 0},
+                new int[] {1, 0},
+                new int[] {0, 1},
+                new int[] {0, -1}));
     super.longMove = new ArrayList<>();
   }
 }

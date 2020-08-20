@@ -1,18 +1,23 @@
 package edu.wpi.teamname.models.match.board;
 
 import edu.wpi.teamname.models.match.board.pieces.Piece;
+import edu.wpi.teamname.views.match.components.MatchBoardController;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 public class TileGrid {
 
   final String lightColor = "#C7AD7F";
   final String darkColor = "#654321";
 
+  MatchBoardController mbc;
   private Tile[] tiles = new Tile[64];
 
-  public TileGrid() {}
+  public TileGrid(MatchBoardController mbc) {
+    this.mbc = mbc;
+  }
 
   public Tile getTile(int row, int col) {
     return tiles[8 * row + col];
@@ -43,7 +48,7 @@ public class TileGrid {
     String colName = String.valueOf((char) (col + 97));
     String rowName = Integer.toString(8 - row);
 
-    Tile tile = new Tile(pane, colName + rowName);
+    Tile tile = new Tile(pane, new int[] {row, col}, mbc);
     this.setTile(tile, row, col);
 
     int pos = ((col % 2) + (row % 2)) % 2;
@@ -75,5 +80,12 @@ public class TileGrid {
       label.setTextFill(Color.web(lightColor));
     }
     return label;
+  }
+
+  public void clearMoves() {
+    for (Tile tile : tiles) {
+      Pane pane = tile.getPane();
+      pane.getChildren().removeIf(n -> n instanceof Circle);
+    }
   }
 }
