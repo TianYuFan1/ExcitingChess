@@ -97,7 +97,7 @@ public class ServerThread extends Thread {
       this.getSocket()
           .getOutputStream()
           .write(
-              (i.getOperation() + '|' + i.getUser() + '|' + i.getTarget() + '|' + i.getPayload())
+              (i.getOperation() + '|' + i.getUser() + '|' + i.getTarget() + '|' + i.getPayload() + '\0')
                   .getBytes());
     } catch (IOException e) {
       e.printStackTrace();

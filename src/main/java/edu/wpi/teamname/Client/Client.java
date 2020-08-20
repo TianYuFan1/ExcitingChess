@@ -3,8 +3,10 @@ package edu.wpi.teamname.Client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Client {
 
@@ -69,15 +71,41 @@ public class Client {
     String payload = instruction.getPayload();
     switch (op) {
       case ("move"):
-        // TODO Have this modify the client state
+
         break;
       case ("takeback"):
         // TODO Apply Redo method
         break;
       case ("viewgame"):
-        // TODO Apply viewgame
+        /*
+        Want to distinguish between a loaded game for view and a loaded game to play
+         */
+        parseMoves(payload);
+        break;
+      case ("loadgame"):
+        parseMoves(payload);
         break;
     }
+  }
+
+  /**
+   * Turns a String of form move*move*move*move*...move*
+   * into an ArrayList of form move, move, move
+   * @param moves String
+   * @return ArrayList
+   */
+  public ArrayList<String> parseMoves (String moves) {
+    ArrayList<String> moveList = new ArrayList<>();
+    StringBuilder sr = new StringBuilder();
+    for (int i = 0; i < moves.length(); i++) {
+      char currChar = moves.charAt(i);
+      if (currChar == '*') {
+        moveList.add(sr.toString());
+        sr = new StringBuilder();
+      }
+      else sr.append(currChar);
+    }
+    return moveList;
   }
 
   /**

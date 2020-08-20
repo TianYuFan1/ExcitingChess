@@ -76,15 +76,21 @@ public class Server extends Thread {
   }
 
   /**
-   * Sends Current game to both Clients in case of reset
+   * Sends Current game to both Clients in case of reset SEND ALL AT ONCE
    *
    * @param i Instruction to be processed
    */
   public void sendCurrentGame(Instruction i) {
     ServerThread destination = this.activeUsers.get(i.getTarget());
     ServerThread origin = this.activeUsers.get(i.getUser());
-
-    for (int count = 0; count < activeGame.size() - 1; count++) {}
+    StringBuilder moves = new StringBuilder();
+    for (int count = 0; count < activeGame.size(); count++) {
+      moves.append(activeGame.get(count));
+      moves.append(activeGame.get('*'));
+    }
+    Instruction instruction = new Instruction("loadgame", "server", "client", moves.toString());
+    destination.sendInstruction(instruction);
+    origin.sendInstruction(instruction);
   }
 
   /**
