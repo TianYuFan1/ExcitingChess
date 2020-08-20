@@ -1,9 +1,7 @@
 package edu.wpi.teamname.Database;
 
-import edu.wpi.teamname.Server.Instruction;
+import edu.wpi.teamname.Instruction.Instruction;
 
-import javax.xml.transform.Result;
-import java.io.*;
 import java.sql.*;
 import java.util.*;
 
@@ -35,6 +33,7 @@ public class Database {
       return false;
     }
     try {
+      //TODO Consider gameID's being white/black blind
       statement.execute(
           ""
               + "CREATE TABLE games ("
@@ -100,6 +99,7 @@ public class Database {
                               "(moveNumber, gameID, whiteMove, blackMove) " +
                               "VALUES (?,?,?,?)");
       for (int i = 0; i < moveList.size(); i += 2) {
+        //TODO Make sure moves go 1,2,3,4...
         insertMoves.setInt(1, i / 2);
         insertMoves.setString(2, gameID);
         insertMoves.setString(3, moveList.get(i));

@@ -1,9 +1,10 @@
 package edu.wpi.teamname.Client;
 
+import edu.wpi.teamname.Instruction.Instruction;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;

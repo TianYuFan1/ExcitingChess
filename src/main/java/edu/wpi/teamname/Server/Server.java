@@ -1,6 +1,8 @@
 package edu.wpi.teamname.Server;
 
 import edu.wpi.teamname.Database.Database;
+import edu.wpi.teamname.Instruction.Instruction;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -8,6 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 public class Server extends Thread {
   private ServerSocket socket;

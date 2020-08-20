@@ -1,5 +1,7 @@
 package edu.wpi.teamname.Server;
 
+import edu.wpi.teamname.Instruction.Instruction;
+
 import java.io.IOException;
 import java.net.Socket;
 
