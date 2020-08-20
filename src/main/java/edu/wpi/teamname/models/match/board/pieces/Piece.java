@@ -1,12 +1,22 @@
 package edu.wpi.teamname.models.match.board.pieces;
 
+import edu.wpi.teamname.models.match.board.MoveDir;
 import edu.wpi.teamname.models.match.board.Tile;
+import edu.wpi.teamname.views.match.components.MatchBoardController;
 import javafx.scene.image.ImageView;
+
+import java.awt.image.AreaAveragingScaleFilter;
+import java.util.ArrayList;
 
 public class Piece {
   String color;
   ImageView image;
   Tile currentTile;
+  MatchBoardController mbc;
+  ArrayList<int[]> shortMove;
+  ArrayList<int[]> longMove;
+
+
 
   public Piece(String color, String whitePath, String blackPath) {
     this.color = color;
@@ -35,4 +45,9 @@ public class Piece {
   public Tile getTile() {
     return this.currentTile;
   }
+
+  public void setMatchBoardController(MatchBoardController mbc) {
+    this.mbc = mbc;
+  }
+
 }

@@ -5,10 +5,10 @@ import edu.wpi.teamname.views.match.components.MatchBoardController;
 import javafx.scene.layout.GridPane;
 
 public class PieceSet {
-  MatchBoardController matchBoardController;
+  MatchBoardController mbc;
 
-  public PieceSet(String color, MatchBoardController matchBoardController) {
-    this.matchBoardController = matchBoardController;
+  public PieceSet(String color, MatchBoardController mbc) {
+    this.mbc = mbc;
     createRows(color);
   }
 
@@ -39,9 +39,9 @@ public class PieceSet {
   }
 
   public void addPiece(Piece piece, int row, int col) {
-    GridPane gp = matchBoardController.getBoardGrid();
-    TileGrid tiles = matchBoardController.getTiles();
-
+    GridPane gp = mbc.getBoardGrid();
+    TileGrid tiles = mbc.getTiles();
+    piece.setMatchBoardController(mbc);
     gp.add(piece.getImage(), col, row);
     tiles.addPiece(piece, row, col);
     piece.setTile(tiles.getTile(row, col));
