@@ -53,9 +53,9 @@ public class TileGrid {
 
     int pos = ((col % 2) + (row % 2)) % 2;
     if (pos == 0) {
-      pane.setStyle("-fx-background-color:" + lightColor);
+      tile.setDefaultColor(lightColor);
     } else {
-      pane.setStyle("-fx-background-color:" + darkColor);
+      tile.setDefaultColor(darkColor);
     }
 
     if (col == 0) {
@@ -83,6 +83,19 @@ public class TileGrid {
   }
 
   public void clearMoves() {
+    for (Tile tile : tiles) {
+      Pane pane = tile.getPane();
+      pane.getChildren().removeIf(n -> n instanceof Circle);
+    }
+  }
+
+  public void resetAllPaneColor() {
+    for (Tile tile : tiles) {
+      tile.resetColor();
+    }
+  }
+
+  public void clearAllCircle() {
     for (Tile tile : tiles) {
       Pane pane = tile.getPane();
       pane.getChildren().removeIf(n -> n instanceof Circle);

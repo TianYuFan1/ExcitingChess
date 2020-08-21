@@ -29,5 +29,6 @@
           <RowConstraints maxHeight="135.0" minHeight="135.0" prefHeight="135.0" vgrow="ALWAYS" />
         </rowConstraints>
       </GridPane>
+      <AnchorPane fx:id="pn_copy" mouseTransparent="true" prefHeight="1080.0" prefWidth="1080.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>

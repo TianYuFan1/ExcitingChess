@@ -1,5 +1,6 @@
 package edu.wpi.teamname.models.match.board.pieces;
 
+import edu.wpi.teamname.helper.match.board.MatchBoardHelper;
 import edu.wpi.teamname.models.match.board.Tile;
 import edu.wpi.teamname.views.match.components.MatchBoardController;
 import java.util.ArrayList;
@@ -21,15 +22,10 @@ public class Piece {
     } else {
       createImage(blackPath);
     }
-
-    //    image.setOnMouseClicked(event -> setupOnClick());
   }
 
   public void createImage(String path) {
-    this.image = new ImageView(path);
-    this.image.setFitHeight(90);
-    this.image.setPreserveRatio(true);
-    this.image.setMouseTransparent(true);
+    this.image = MatchBoardHelper.formatImage(path);
   }
 
   public ImageView getImage() {
@@ -37,6 +33,7 @@ public class Piece {
   }
 
   public void setTile(Tile tile) {
+    tile.setPiece(this);
     this.currentTile = tile;
   }
 
@@ -56,14 +53,7 @@ public class Piece {
     return this.longMove;
   }
 
-  //  public void setupOnClick() {
-  //    TileGrid tg = mbc.getTiles();
-  //    int[] pos = currentTile.getPos();
-  //
-  //    for (int i = 0; i < shortMove.size(); i++) {
-  //      int[] dir = shortMove.get(i);
-  //      Tile tile = tg.getTile(pos[0] + dir[0], pos[1] + dir[1]);
-  //      tile.getPane().getChildren().add(new Circle(10));
-  //    }
-  //  }
+  public String getColor() {
+    return color;
+  }
 }
