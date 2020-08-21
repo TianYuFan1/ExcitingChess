@@ -17,6 +17,7 @@ public class MatchBoardHelper {
   }
 
   public static boolean hasCircleInPane(Pane pain) {
+
     boolean hasCircle = false;
     for (Node node : pain.getChildren()) {
       if (node instanceof Circle) {

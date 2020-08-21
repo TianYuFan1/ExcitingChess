@@ -48,14 +48,13 @@ public class TileGrid {
     String colName = String.valueOf((char) (col + 97));
     String rowName = Integer.toString(8 - row);
 
-    Tile tile = new Tile(pane, new int[] {row, col}, mbc);
-    this.setTile(tile, row, col);
+    Tile tile;
 
     int pos = ((col % 2) + (row % 2)) % 2;
     if (pos == 0) {
-      tile.setDefaultColor(lightColor);
+      tile = new Tile(pane, new int[] {row, col}, mbc, lightColor);
     } else {
-      tile.setDefaultColor(darkColor);
+      tile = new Tile(pane, new int[] {row, col}, mbc, darkColor);
     }
 
     if (col == 0) {
@@ -65,7 +64,7 @@ public class TileGrid {
     if (row == 0) {
       pane.getChildren().add(createLabel(colName, 117, 5, pos));
     }
-
+    this.setTile(tile, row, col);
     return pane;
   }
 

@@ -37,6 +37,13 @@ public class MatchBoardController implements MatchController {
         gp_board.add(tiles.addTile(row, col), col, row);
       }
     }
+    for (int i = 0; i < 64; i++) {
+      if (i % 8 == 0) {
+        System.out.println("");
+      }
+      System.out.print(tiles.getTile(i).getAbsPos() + " ");
+    }
+    System.out.println("");
   }
 
   private void createPieces() {

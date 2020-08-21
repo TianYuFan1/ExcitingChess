@@ -5,6 +5,7 @@ import edu.wpi.teamname.models.match.board.pieces.Pawn;
 import edu.wpi.teamname.models.match.board.pieces.Piece;
 import edu.wpi.teamname.views.match.components.MatchBoardController;
 import java.util.ArrayList;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -12,46 +13,176 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class Tile {
-
+  // the parent board controller
   MatchBoardController mbc;
-  int[] pos;
-  Piece piece = null;
-  Pane pane;
+  // the default color of tile
   String defaultColor;
+  // the (row, col) position of tile
+  int[] pos;
+  // the current piece of tile
+  Piece piece;
+  // the pane representing tile
+  Pane pane;
 
-  public Tile(Pane pane, int[] pos, MatchBoardController mbc) {
-    this.pos = pos;
-    this.pane = pane;
+  /**
+   * Instantiates a new tile object
+   *
+   * @param pane the pane representing the tile
+   * @param pos the position of the tile in the gridPane
+   * @param mbc the parent board controller
+   */
+  public Tile(Pane pane, int[] pos, MatchBoardController mbc, String defaultColor) {
     this.mbc = mbc;
+    this.defaultColor = defaultColor;
+    this.pos = pos;
+    this.piece = null;
+    this.pane = pane;
+    resetColor();
   }
 
+  /**
+   * Returns the row and column of the tile
+   *
+   * @return the (row, col) of the tile
+   */
+  public int[] getPos() {
+    return this.pos;
+  }
+
+  /**
+   * Returns the index of the tile in an array
+   *
+   * @return the index of the tile
+   */
+  public int getIndex() {
+    int row = this.pos[0];
+    int col = this.pos[1];
+    return row * 8 + col;
+  }
+
+  /**
+   * Returns the absolute position of the tile
+   *
+   * @return the absolute position of the tile
+   */
+  public String getAbsPos() {
+    String colName;
+    String rowName;
+    if (mbc.getColor().equals("white")) {
+      colName = String.valueOf((char) (97 + this.pos[1]));
+      rowName = Integer.toString(8 - this.pos[0]);
+    } else {
+      colName = String.valueOf((char) (104 - this.pos[1]));
+      rowName = Integer.toString(1 + this.pos[0]);
+    }
+    return colName + rowName;
+  }
+
+  /**
+   * Returns the piece on the tile
+   *
+   * @return the piece on the tile
+   */
+  public Piece getPiece() {
+    return this.piece;
+  }
+
+  /**
+   * Returns whether the tile has a piece
+   *
+   * @return whether the tile has a piece
+   */
+  public boolean hasPiece() {
+    return !(this.piece == null);
+  }
+
+  /**
+   * Returns the pane representing the tile
+   *
+   * @return the pane representing the tile
+   */
+  public Pane getPane() {
+    return this.pane;
+  }
+
+  /** Reset tile color to default */
+  public void resetColor() {
+    this.pane.setStyle("-fx-background-color: " + defaultColor);
+  }
+
+  /**
+   * Place a new piece on the tile
+   *
+   * @param piece the piece to be placed on the tile
+   */
   public void setPiece(Piece piece) {
     this.piece = piece;
-    if (this.piece != null && this.mbc.getColor().equals(this.piece.getColor())) {
+    if (this.hasPiece() && this.piece.isUserPiece()) {
       this.pane.setOnMouseClicked(event -> setupOnClick(event));
       this.pane.setOnMouseDragged(event -> setupOnDragged(event));
       this.pane.setOnMouseReleased(event -> setupOnDraggedReleased(event));
     }
   }
 
-  public Piece getPiece() {
-    return this.piece;
+  /**
+   * Handles a click event on a pane
+   *
+   * @param event the mouse event
+   */
+  public void setupOnClick(MouseEvent event) {
+    TileGrid tg = mbc.getTiles();
+    tg.clearMoves();
+    calculateShortMoves(tg);
+    calculateLongMoves(tg);
+    calculateSpecialMoves(tg);
   }
 
-  public Pane getPane() {
-    return this.pane;
+  /**
+   * Calculates all possible short moves of piece
+   * @param tg the tile grid containing all tiles on board
+   */
+  public void calculateShortMoves(TileGrid tg) {
+    ArrayList<int[]> move = this.piece.getShortMoves();
+    for (int[] dir : move) {
+      int x = this.pos[0] + dir[0];
+      int y = this.pos[1] + dir[1];
+      if (isWithinBoard(x, y)) {
+        Tile tile = tg.getTile(x, y);
+        if (this.piece instanceof Pawn && tile.hasPiece()) {
+          break;
+        }
+        if (!tile.hasPiece() || !tile.getPiece().isUserPiece()) {
+          tile.getPane().getChildren().add(createMoveCircle());
+        }
+      }
+    }
   }
 
-  public String getAbsPos() {
-    // TODO Create different absolute position for each player
-    String colName = String.valueOf((char) (this.pos[0] + 97));
-    String rowName = Integer.toString(8 - this.pos[1]);
-    return colName + rowName;
+  /**
+   * Calculates all possible long moves of piece
+   * @param tg the tile grid containing all tiles on board
+   */
+  public void calculateLongMoves(TileGrid tg) {
+    ArrayList<int[]> move = piece.getLongMoves();
+    for (int[] dir : move) {
+      int x = this.pos[0] + dir[0];
+      int y = this.pos[1] + dir[1];
+      for (int i = 1; isWithinBoard(x, y); i++) {
+        Tile tile = tg.getTile(x, y);
+        if (tile.hasPiece()) {
+          if (!tile.piece.isUserPiece()) {
+            tile.getPane().getChildren().add(createMoveCircle());
+          }
+          break;
+        }
+        tile.getPane().getChildren().add(createMoveCircle());
+        x = this.pos[0] + i * dir[0];
+        y = this.pos[1] + i * dir[1];
+      }
+    }
   }
 
-  public int[] getPos() {
-    return this.pos;
-  }
+  public void calculateSpecialMoves(TileGrid tg) {}
 
   public void setupOnDraggedReleased(MouseEvent event) {
     this.piece.getImage().setOpacity(1.0);
@@ -65,7 +196,7 @@ public class Tile {
     for (int col = 0; col < 8; col++) {
       for (int row = 0; row < 8; row++) {
         Pane pane = (Pane) mbc.getBoardGrid().getChildren().get(8 * row + col);
-        boolean hasCircle = MatchBoardHelper.hasCircleInPane(pane);
+        boolean hasCircle = hasCircleInPane(pane);
         if (mbc.getBoardGrid()
                 .getCellBounds(col, row)
                 .contains(event.getSceneY(), event.getSceneX() - 420 + 90 / 2)
@@ -103,7 +234,7 @@ public class Tile {
     for (int col = 0; col < 8; col++) {
       for (int row = 0; row < 8; row++) {
         Pane pane = (Pane) mbc.getBoardGrid().getChildren().get(8 * row + col);
-        boolean hasCircle = MatchBoardHelper.hasCircleInPane(pane);
+        boolean hasCircle = hasCircleInPane(pane);
         if (mbc.getBoardGrid()
                 .getCellBounds(col, row)
                 .contains(event.getSceneY(), event.getSceneX() - 420 + 90 / 2)
@@ -117,47 +248,8 @@ public class Tile {
     this.mbc.getCopyPane().getChildren().add(copy);
   }
 
-  public void setupOnClick(MouseEvent event) {
-    TileGrid tg = mbc.getTiles();
-    tg.clearMoves();
-    ArrayList<int[]> shortMoves = piece.getShortMoves();
-    ArrayList<int[]> longMoves = piece.getLongMoves();
-
-    for (int i = 0; i < shortMoves.size(); i++) {
-      int[] dir = shortMoves.get(i);
-      if (piece instanceof Pawn && dir[0] == -2 && this.pos[0] != 6) {
-        continue;
-      }
-      int x = this.pos[0] + dir[0];
-      int y = this.pos[1] + dir[1];
-      if (x > -1 && x < 8 && y > -1 && y < 8) {
-        Tile tile = tg.getTile(x, y);
-        if (tile.getPiece() == null || !tile.getPiece().getColor().equals(mbc.getColor())) {
-          tile.getPane().getChildren().add(createMoveCircle());
-        }
-      }
-    }
-
-    for (int i = 0; i < longMoves.size(); i++) {
-      int[] dir = longMoves.get(i);
-      int x = this.pos[0] + dir[0];
-      int y = this.pos[1] + dir[1];
-
-      for (int j = 1; x > -1 && x < 8 && y > -1 && y < 8; j++) {
-        Tile tile = tg.getTile(x, y);
-
-        if (tile.getPiece() != null) {
-          if (!tile.getPiece().getColor().equals(mbc.getColor())) {
-            tile.getPane().getChildren().add(createMoveCircle());
-          }
-          break;
-        }
-
-        tile.getPane().getChildren().add(createMoveCircle());
-        x = this.pos[0] + j * dir[0];
-        y = this.pos[1] + j * dir[1];
-      }
-    }
+  public boolean isWithinBoard(int x, int y) {
+    return (x < 8 && x > -1 && y < 8 && y > -1);
   }
 
   public Circle createMoveCircle() {
@@ -168,12 +260,14 @@ public class Tile {
     return circle;
   }
 
-  public void setDefaultColor(String defaultColor) {
-    this.defaultColor = defaultColor;
-    this.pane.setStyle("-fx-background-color: " + defaultColor);
-  }
+  public boolean hasCircleInPane(Pane pane) {
 
-  public void resetColor() {
-    this.pane.setStyle("-fx-background-color: " + defaultColor);
+    boolean hasCircle = false;
+    for (Node node : pane.getChildren()) {
+      if (node instanceof Circle) {
+        hasCircle = true;
+      }
+    }
+    return hasCircle;
   }
 }
