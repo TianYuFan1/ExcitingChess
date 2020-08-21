@@ -9,6 +9,7 @@ public class Queen extends Piece {
         color,
         "edu/wpi/teamname/images/pieces/WhiteQueen.png",
         "edu/wpi/teamname/images/pieces/BlackQueen.png");
+    super.character = "Q";
     setupMoves();
   }
 

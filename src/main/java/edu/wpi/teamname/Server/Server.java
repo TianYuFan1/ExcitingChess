@@ -141,8 +141,8 @@ public class Server extends Thread {
   @Override
   public void run() {
     try {
-      // initializeDB();
-      // this.database.initTables();
+      initializeDB();
+      this.database.initTables();
       while (true) {
         Socket connection = getSocket().accept();
         System.out.println("Welcome to the server: " + connection.getInetAddress());

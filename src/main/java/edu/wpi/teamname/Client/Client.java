@@ -1,6 +1,7 @@
 package edu.wpi.teamname.Client;
 
 import edu.wpi.teamname.Instruction.Instruction;
+import edu.wpi.teamname.views.match.MatchScreenController;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,10 +15,11 @@ public class Client {
   private Socket socket;
   private InputStream readIn;
   private OutputStream sendOut;
+  private MatchScreenController matchScreenController;
 
-  public Client(String user, Socket socket) {
+  public Client(String user, MatchScreenController msc) {
     this.username = user;
-    this.socket = socket;
+    this.matchScreenController = msc;
   }
 
   /**
@@ -27,9 +29,8 @@ public class Client {
    */
   public void connect(String user) {
     try {
-      Socket socket = new Socket(InetAddress.getLocalHost(), 4999);
+      this.socket = new Socket(InetAddress.getLocalHost(), 4999);
       this.username = user;
-      this.socket = socket;
       this.readIn = socket.getInputStream();
       this.sendOut = socket.getOutputStream();
       Instruction initialize = new Instruction("initialize", username, "", "");
@@ -71,6 +72,7 @@ public class Client {
     String payload = instruction.getPayload();
     switch (op) {
       case ("move"):
+        slideMoveOverKnowWhatImsayin(instruction);
         break;
       case ("takeback"):
         // TODO Apply Redo method
@@ -119,10 +121,27 @@ public class Client {
   public void sendInstruction(Instruction i) {
     try {
       this.sendOut.write(
-          (i.getOperation() + '|' + i.getUser() + '|' + i.getTarget() + '|' + i.getPayload())
+          (i.getOperation()
+                  + '|'
+                  + i.getUser()
+                  + '|'
+                  + i.getTarget()
+                  + '|'
+                  + i.getPayload()
+                  + " "
+                  + '\0')
               .getBytes());
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Sends moves to controller
+   *
+   * @param instruction Instruction
+   */
+  public void slideMoveOverKnowWhatImsayin(Instruction instruction) {
+    matchScreenController.getMatchBoardController().getTiles().movePiece(instruction.getPayload());
   }
 }

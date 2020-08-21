@@ -13,6 +13,7 @@ public class Piece {
   MatchBoardController mbc;
   ArrayList<int[]> shortMove;
   ArrayList<int[]> longMove;
+  String character;
 
   public Piece(String color, String whitePath, String blackPath) {
     this.color = color;
@@ -35,6 +36,10 @@ public class Piece {
   public void setTile(Tile tile) {
     tile.setPiece(this);
     this.currentTile = tile;
+  }
+
+  public String getCharacter() {
+    return this.character;
   }
 
   public Tile getTile() {

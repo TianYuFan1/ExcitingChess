@@ -1,5 +1,6 @@
 package edu.wpi.teamname.models.match.board;
 
+import edu.wpi.teamname.Instruction.Instruction;
 import edu.wpi.teamname.helper.match.board.MatchBoardHelper;
 import edu.wpi.teamname.models.match.board.pieces.Pawn;
 import edu.wpi.teamname.models.match.board.pieces.Piece;
@@ -226,7 +227,6 @@ public class Tile {
     this.mbc.getTiles().clearAllCircle();
   }
 
-
   public void movePiece(MouseEvent event) {
     for (int row = 0; row < 8; row++) {
       for (int col = 0; col < 8; col++) {
@@ -242,8 +242,10 @@ public class Tile {
             ((Pawn) this.piece).setHasMoved(true);
           }
           // Capture piece
+          String modifier = "";
           if (newTile.hasPiece()) {
             grid.getChildren().remove(newTile.getPiece().getImage());
+            modifier = "X";
           }
           // Move piece
           removeTileEventListeners();
@@ -252,9 +254,29 @@ public class Tile {
           newTile.setPiece(this.piece);
           this.piece.setTile(newTile);
           this.piece = null;
+          sendMove(this, newTile, modifier);
         }
       }
     }
+  }
+
+  /**
+   * Sends move to server
+   *
+   * @param origin Tile
+   * @param destination Tile
+   * @param modifier String
+   */
+  public void sendMove(Tile origin, Tile destination, String modifier) {
+    String move =
+        destination.getPiece().getCharacter()
+            + origin.getAbsPos()
+            + destination.getAbsPos()
+            + modifier;
+    this.mbc
+        .getMatchScreenController()
+        .getClient()
+        .sendInstruction(new Instruction("move", "", "", move));
   }
 
   public void removeTileEventListeners() {
@@ -262,8 +284,6 @@ public class Tile {
     this.pane.setOnMouseDragged(e -> {});
     this.pane.setOnMouseReleased(e -> {});
   }
-
-  public void movePiece(String move) {}
 
   public void setupOnDragged(MouseEvent event) {
     setupOnClick(event);

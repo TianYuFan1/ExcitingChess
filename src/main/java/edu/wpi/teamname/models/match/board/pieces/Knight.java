@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Knight extends Piece {
-
   public Knight(String color) {
     super(
         color,
         "edu/wpi/teamname/images/pieces/WhiteKnight.png",
         "edu/wpi/teamname/images/pieces/BlackKnight.png");
+    super.character = "N";
     setupMoves();
   }
 

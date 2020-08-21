@@ -9,6 +9,7 @@ public class King extends Piece {
         color,
         "edu/wpi/teamname/images/pieces/WhiteKing.png",
         "edu/wpi/teamname/images/pieces/BlackKing.png");
+    super.character = "K";
     setupMoves();
   }
 
