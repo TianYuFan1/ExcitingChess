@@ -20,10 +20,11 @@ public class Pawn extends Piece {
     super.longMove = new ArrayList<>();
   }
 
-  @Override
-  public void specialMove() {}
-
   public void setHasMoved(boolean hasMoved) {
     this.hasMoved = true;
+  }
+
+  public boolean getHasMoved() {
+    return this.hasMoved;
   }
 }

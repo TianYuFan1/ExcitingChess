@@ -60,8 +60,4 @@ public class Piece {
   public boolean isUserPiece() {
     return this.mbc.getColor().equals(this.color);
   }
-
-  public void specialMove() {
-    return;
-  }
 }

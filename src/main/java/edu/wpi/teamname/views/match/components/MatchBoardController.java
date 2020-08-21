@@ -15,6 +15,9 @@ public class MatchBoardController implements MatchController {
   @FXML GridPane gp_board;
   @FXML AnchorPane pn_copy;
 
+  public static final int imageSize = 90;
+  public static final int boardOffset = 420;
+
   private TileGrid tiles;
   private PieceSet pieces;
   private String color;
