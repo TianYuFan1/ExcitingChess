@@ -1,6 +1,7 @@
 package edu.wpi.teamname.models.match.board;
 
 import edu.wpi.teamname.helper.match.board.MatchBoardHelper;
+import edu.wpi.teamname.models.match.board.pieces.Pawn;
 import edu.wpi.teamname.models.match.board.pieces.Piece;
 import edu.wpi.teamname.views.match.components.MatchBoardController;
 import java.util.ArrayList;
@@ -74,10 +75,10 @@ public class Tile {
           if (newTile.getPiece() != null) {
             mbc.getBoardGrid().getChildren().remove(newTile.getPiece().getImage());
           }
-          this.pane.removeEventHandler(MouseEvent.MOUSE_CLICKED, this::setupOnClick);
-          this.pane.removeEventHandler(MouseEvent.MOUSE_DRAGGED, this::setupOnDragged);
-          this.pane.removeEventHandler(MouseEvent.MOUSE_RELEASED, this::setupOnDraggedReleased);
           this.piece.setTile(newTile);
+          this.pane.setOnMouseClicked(e -> {});
+          this.pane.setOnMouseDragged(e -> {});
+          this.pane.setOnMouseReleased(e -> {});
           newTile.setPiece(this.piece);
           mbc.getBoardGrid().getChildren().remove(this.piece.getImage());
           mbc.getBoardGrid().add(newTile.getPiece().getImage(), row, col);
@@ -124,6 +125,9 @@ public class Tile {
 
     for (int i = 0; i < shortMoves.size(); i++) {
       int[] dir = shortMoves.get(i);
+      if (piece instanceof Pawn && dir[0] == -2 && this.pos[0] != 6) {
+        continue;
+      }
       int x = this.pos[0] + dir[0];
       int y = this.pos[1] + dir[1];
       if (x > -1 && x < 8 && y > -1 && y < 8) {
