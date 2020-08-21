@@ -226,6 +226,7 @@ public class Tile {
     this.mbc.getTiles().clearAllCircle();
   }
 
+
   public void movePiece(MouseEvent event) {
     for (int row = 0; row < 8; row++) {
       for (int col = 0; col < 8; col++) {
