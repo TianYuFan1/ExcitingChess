@@ -10,6 +10,7 @@ public class Bishop extends Piece {
         color,
         "edu/wpi/teamname/images/pieces/WhiteBishop.png",
         "edu/wpi/teamname/images/pieces/BlackBishop.png");
+    super.character = "B";
     setupMoves();
   }
 

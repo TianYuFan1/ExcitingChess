@@ -1,8 +1,10 @@
 package edu.wpi.teamname.models.match.board;
 
+import edu.wpi.teamname.Instruction.Move;
 import edu.wpi.teamname.models.match.board.pieces.Piece;
 import edu.wpi.teamname.views.match.components.MatchBoardController;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -99,5 +101,37 @@ public class TileGrid {
       Pane pane = tile.getPane();
       pane.getChildren().removeIf(n -> n instanceof Circle);
     }
+  }
+
+  /**
+   * Looks up a tile by column and row syntax
+   *
+   * @param tileName Stirng
+   * @return null if not found, Tile if found
+   */
+  public Tile lookupTile(String tileName) {
+    for (Tile tile : tiles) {
+      if (tile.getAbsPos().equals(tileName)) {
+        return tile;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Takes a move String and moves the piece on the board
+   *
+   * @param m String
+   */
+  public void movePiece(String m) {
+    Move move = Move.parseMove(m);
+    GridPane grid = mbc.getBoardGrid();
+    Tile origin = mbc.getTiles().lookupTile(move.getOrigin());
+    Tile destination = mbc.getTiles().lookupTile(move.getDestination());
+    grid.getChildren().remove(origin.piece.getImage());
+    grid.add(origin.piece.getImage(), destination.pos[0], destination.pos[1]);
+    destination.setPiece(origin.piece);
+    origin.getPiece().setTile(destination);
+    origin.setPiece(null);
   }
 }

@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
 public class MatchBoardController implements MatchController {
+
   MatchScreenController matchScreenController;
 
   @FXML GridPane gp_board;
@@ -25,6 +26,10 @@ public class MatchBoardController implements MatchController {
   @Override
   public void setMatchScreenController(MatchScreenController matchScreenController) {
     this.matchScreenController = matchScreenController;
+  }
+
+  public MatchScreenController getMatchScreenController() {
+    return matchScreenController;
   }
 
   public void initialize() {

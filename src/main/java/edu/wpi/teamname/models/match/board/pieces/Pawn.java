@@ -12,6 +12,7 @@ public class Pawn extends Piece {
         "edu/wpi/teamname/images/pieces/WhitePawn.png",
         "edu/wpi/teamname/images/pieces/BlackPawn.png");
     this.hasMoved = false;
+    super.character = "P";
     setupMoves();
   }
 
