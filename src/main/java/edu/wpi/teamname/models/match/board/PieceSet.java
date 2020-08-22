@@ -17,7 +17,7 @@ public class PieceSet {
 
     createPawnRow(color, 6);
     createPieceRow(color, 7);
-    createPawnRow(opponent, 1);
+    createPawnRow(opponent, 4);
     createPieceRow(opponent, 0);
   }
 

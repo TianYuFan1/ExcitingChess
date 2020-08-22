@@ -203,8 +203,8 @@ public class Tile {
    */
   public void handlePawnSpecialMoves(TileGrid tg) {
     // Move two spaces forward
-    if (!((Pawn) this.piece).getHasMoved()) {
-      Tile tile = tg.getTile(this.pos[0] - 2, this.pos[1]);
+    Tile tile = tg.getTile(this.pos[0] - 2, this.pos[1]);
+    if (!((Pawn) this.piece).getHasMoved() && !tile.hasPiece()) {
       tile.getPane().getChildren().add(createMoveCircle());
     }
     // Capture
@@ -218,6 +218,11 @@ public class Tile {
     }
   }
 
+  /**
+   * Handles when drag over pane is released
+   *
+   * @param event the drag event
+   */
   public void setupOnDraggedReleased(MouseEvent event) {
     this.piece.getImage().setOpacity(1.0);
     this.mbc.getCopyPane().getChildren().clear();
@@ -226,16 +231,18 @@ public class Tile {
     this.mbc.getTiles().clearAllCircle();
   }
 
+  /**
+   * Moves piece from current tile to next tile
+   *
+   * @param event the drag event
+   */
   public void movePiece(MouseEvent event) {
     for (int row = 0; row < 8; row++) {
       for (int col = 0; col < 8; col++) {
         GridPane grid = mbc.getBoardGrid();
-        Tile newTile = mbc.getTiles().getTile(col, row);
-        boolean inBound =
-            grid.getCellBounds(col, row)
-                .contains(
-                    event.getSceneY(), event.getSceneX() - mbc.boardOffset + mbc.imageSize / 2);
-        if (inBound && hasCircleInTile(newTile)) {
+        Tile newTile = mbc.getTiles().getTile(row, col);
+
+        if (isInPane(event, row, col) && hasCircleInTile(newTile)) {
           // Set pawn as moved
           if (!newTile.equals(this) && this.piece instanceof Pawn) {
             ((Pawn) this.piece).setHasMoved(true);
@@ -247,7 +254,7 @@ public class Tile {
           // Move piece
           removeTileEventListeners();
           grid.getChildren().remove(this.piece.getImage());
-          grid.add(this.piece.getImage(), row, col);
+          grid.add(this.piece.getImage(), col, row);
           newTile.setPiece(this.piece);
           this.piece.setTile(newTile);
           this.piece = null;
@@ -256,6 +263,7 @@ public class Tile {
     }
   }
 
+  /** Remove all listeners from tile */
   public void removeTileEventListeners() {
     this.pane.setOnMouseClicked(e -> {});
     this.pane.setOnMouseDragged(e -> {});
@@ -264,38 +272,57 @@ public class Tile {
 
   public void movePiece(String move) {}
 
+  /**
+   * Handles when pane is dragged
+   *
+   * @param event the drag event
+   */
   public void setupOnDragged(MouseEvent event) {
+    TileGrid tiles = mbc.getTiles();
+
     setupOnClick(event);
+    tiles.resetAllPaneColor();
     this.piece.getImage().setOpacity(0.5);
 
     ImageView copy = MatchBoardHelper.formatImage(piece.getImage().getImage().getUrl());
-
-    mbc.getTiles().resetAllPaneColor();
-    copy.setLayoutX(event.getSceneX() - 420 - 90 / 2);
-    copy.setLayoutY(event.getSceneY() - 90 / 2);
+    copy.setLayoutX(event.getSceneX() - mbc.boardOffset - mbc.imageSize / 2);
+    copy.setLayoutY(event.getSceneY() - mbc.imageSize / 2);
 
     for (int col = 0; col < 8; col++) {
       for (int row = 0; row < 8; row++) {
-        Pane pane = (Pane) mbc.getBoardGrid().getChildren().get(8 * row + col);
-        boolean hasCircle = hasCircleInTile(mbc.getTiles().getTile(col, row));
-
-        if (mbc.getBoardGrid()
-                .getCellBounds(col, row)
-                .contains(event.getSceneY(), event.getSceneX() - 420 + 90 / 2)
-            && hasCircle) {
-          pane.setStyle("-fx-background-color: GREEN");
+        Tile tile = tiles.getTile(row, col);
+        boolean hasCircle = hasCircleInTile(tile);
+        if (isInPane(event, row, col) && hasCircle) {
+          tile.getPane().setStyle("-fx-background-color: GREEN");
         }
       }
     }
 
-    this.mbc.getCopyPane().getChildren().clear();
-    this.mbc.getCopyPane().getChildren().add(copy);
+    Pane copyPane = this.mbc.getCopyPane();
+    copyPane.getChildren().clear();
+    copyPane.getChildren().add(copy);
   }
 
+  /**
+   * Determines whether tile is on the board
+   *
+   * @param x the row
+   * @param y the column
+   * @return whether the tile is on the board
+   */
   public boolean isWithinBoard(int x, int y) {
     return (x < 8 && x > -1 && y < 8 && y > -1);
   }
 
+  public boolean isInPane(MouseEvent e, int row, int col) {
+    GridPane gp = this.mbc.getBoardGrid();
+    return gp.getCellBounds(col, row).contains(e.getSceneX() - mbc.boardOffset, e.getSceneY());
+  }
+  /**
+   * Creates a circle for potential moves
+   *
+   * @return a circle
+   */
   public Circle createMoveCircle() {
     Circle circle = new Circle(50);
     circle.setFill(Color.GREEN);
@@ -304,6 +331,12 @@ public class Tile {
     return circle;
   }
 
+  /**
+   * Determines whether a tile has a circle
+   *
+   * @param tile the tile
+   * @return whether the tile has a circle
+   */
   public boolean hasCircleInTile(Tile tile) {
     Pane pane = tile.getPane();
     boolean hasCircle = false;

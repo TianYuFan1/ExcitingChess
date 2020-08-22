@@ -17,6 +17,7 @@ public class MatchBoardController implements MatchController {
 
   public static final int imageSize = 90;
   public static final int boardOffset = 420;
+  public static final String debugString = "Patricc, I want pie recipe";
 
   private TileGrid tiles;
   private PieceSet pieces;
@@ -40,13 +41,6 @@ public class MatchBoardController implements MatchController {
         gp_board.add(tiles.addTile(row, col), col, row);
       }
     }
-    for (int i = 0; i < 64; i++) {
-      if (i % 8 == 0) {
-        System.out.println("");
-      }
-      System.out.print(tiles.getTile(i).getAbsPos() + " ");
-    }
-    System.out.println("");
   }
 
   private void createPieces() {
