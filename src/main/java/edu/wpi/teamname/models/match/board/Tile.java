@@ -1,6 +1,5 @@
 package edu.wpi.teamname.models.match.board;
 
-import edu.wpi.teamname.helper.match.board.MatchBoardHelper;
 import edu.wpi.teamname.models.match.board.pieces.Pawn;
 import edu.wpi.teamname.models.match.board.pieces.Piece;
 import edu.wpi.teamname.views.match.components.MatchBoardController;
@@ -203,18 +202,26 @@ public class Tile {
    */
   public void handlePawnSpecialMoves(TileGrid tg) {
     // Move two spaces forward
-    Tile tile = tg.getTile(this.pos[0] - 2, this.pos[1]);
-    if (!((Pawn) this.piece).getHasMoved() && !tile.hasPiece()) {
-      tile.getPane().getChildren().add(createMoveCircle());
+    if (this.pos[0] > 2) {
+      Tile tile = tg.getTile(this.pos[0] - 2, this.pos[1]);
+      if (!((Pawn) this.piece).getHasMoved() && !tile.hasPiece()) {
+        tile.getPane().getChildren().add(createMoveCircle());
+      }
     }
     // Capture
-    Tile left = tg.getTile(this.pos[0] - 1, this.pos[1] - 1);
-    Tile right = tg.getTile(this.pos[0] - 1, this.pos[1] + 1);
-    if (left.hasPiece() && !left.getPiece().isUserPiece()) {
-      left.getPane().getChildren().add(createMoveCircle());
-    }
-    if (right.hasPiece() && !right.getPiece().isUserPiece()) {
-      right.getPane().getChildren().add(createMoveCircle());
+    if (this.pos[0] > 0) {
+      if (this.pos[1] > 0) {
+        Tile left = tg.getTile(this.pos[0] - 1, this.pos[1] - 1);
+        if (left.hasPiece() && !left.getPiece().isUserPiece()) {
+          left.getPane().getChildren().add(createMoveCircle());
+        }
+      }
+      if (this.pos[1] < 7) {
+        Tile right = tg.getTile(this.pos[0] - 1, this.pos[1] + 1);
+        if (right.hasPiece() && !right.getPiece().isUserPiece()) {
+          right.getPane().getChildren().add(createMoveCircle());
+        }
+      }
     }
   }
 
@@ -284,7 +291,7 @@ public class Tile {
     tiles.resetAllPaneColor();
     this.piece.getImage().setOpacity(0.5);
 
-    ImageView copy = MatchBoardHelper.formatImage(piece.getImage().getImage().getUrl());
+    ImageView copy = formatImage(piece.getImage().getImage().getUrl());
     copy.setLayoutX(event.getSceneX() - mbc.boardOffset - mbc.imageSize / 2);
     copy.setLayoutY(event.getSceneY() - mbc.imageSize / 2);
 
@@ -346,5 +353,13 @@ public class Tile {
       }
     }
     return hasCircle;
+  }
+
+  public ImageView formatImage(String path) {
+    ImageView imageView = new ImageView(path);
+    imageView.setFitHeight(this.mbc.imageSize);
+    imageView.setPreserveRatio(true);
+    imageView.setMouseTransparent(true);
+    return imageView;
   }
 }

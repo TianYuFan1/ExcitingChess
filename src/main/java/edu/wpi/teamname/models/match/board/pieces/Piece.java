@@ -1,6 +1,5 @@
 package edu.wpi.teamname.models.match.board.pieces;
 
-import edu.wpi.teamname.helper.match.board.MatchBoardHelper;
 import edu.wpi.teamname.models.match.board.Tile;
 import edu.wpi.teamname.views.match.components.MatchBoardController;
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class Piece {
   }
 
   public void createImage(String path) {
-    this.image = MatchBoardHelper.formatImage(path);
+    this.image = formatImage(path);
   }
 
   public ImageView getImage() {
@@ -59,5 +58,13 @@ public class Piece {
 
   public boolean isUserPiece() {
     return this.mbc.getColor().equals(this.color);
+  }
+
+  public ImageView formatImage(String path) {
+    ImageView imageView = new ImageView(path);
+    imageView.setFitHeight(this.mbc.imageSize);
+    imageView.setPreserveRatio(true);
+    imageView.setMouseTransparent(true);
+    return imageView;
   }
 }
