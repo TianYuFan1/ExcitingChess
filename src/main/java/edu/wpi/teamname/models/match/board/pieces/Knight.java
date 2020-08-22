@@ -5,6 +5,11 @@ import java.util.Arrays;
 
 public class Knight extends Piece {
 
+  /**
+   * Creates a new knight piece
+   *
+   * @param color the color of the knight
+   */
   public Knight(String color) {
     super(
         color,
@@ -13,6 +18,7 @@ public class Knight extends Piece {
     setupMoves();
   }
 
+  /** Defines the move directions of the knight */
   public void setupMoves() {
     super.shortMove =
         new ArrayList<>(

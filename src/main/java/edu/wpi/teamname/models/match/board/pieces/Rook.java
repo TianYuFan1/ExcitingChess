@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Rook extends Piece {
+
+  /**
+   * Creates a new rook piece
+   *
+   * @param color the color of the rook
+   */
   public Rook(String color) {
     super(
         color,
@@ -12,6 +18,7 @@ public class Rook extends Piece {
     setupMoves();
   }
 
+  /** Defines the move directions of the rook */
   public void setupMoves() {
     super.shortMove = new ArrayList<>();
     super.longMove =

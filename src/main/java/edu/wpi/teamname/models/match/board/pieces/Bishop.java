@@ -5,6 +5,11 @@ import java.util.Arrays;
 
 public class Bishop extends Piece {
 
+  /**
+   * Creates a new bishop piece
+   *
+   * @param color the color of the bishop
+   */
   public Bishop(String color) {
     super(
         color,
@@ -13,6 +18,7 @@ public class Bishop extends Piece {
     setupMoves();
   }
 
+  /** Defines the move directions of the bishop */
   public void setupMoves() {
     super.shortMove = new ArrayList<>();
     super.longMove =

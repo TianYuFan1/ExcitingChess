@@ -131,7 +131,7 @@ public class Tile {
    */
   public void setupOnClick(MouseEvent event) {
     TileGrid tg = mbc.getTiles();
-    tg.clearMoves();
+    tg.clearAllCircle();
     calculateShortMoves(tg);
     calculateLongMoves(tg);
     calculateSpecialMoves(tg);
@@ -355,6 +355,12 @@ public class Tile {
     return hasCircle;
   }
 
+  /**
+   * Formats an image view from an url
+   *
+   * @param path the url of the image
+   * @return the image view
+   */
   public ImageView formatImage(String path) {
     ImageView imageView = new ImageView(path);
     imageView.setFitHeight(this.mbc.imageSize);

@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class King extends Piece {
+
+  /**
+   * Creates a new king piece
+   *
+   * @param color the color of the king
+   */
   public King(String color) {
     super(
         color,
@@ -12,6 +18,7 @@ public class King extends Piece {
     setupMoves();
   }
 
+  /** Defines the move directions of the king */
   public void setupMoves() {
     super.shortMove =
         new ArrayList<>(
