@@ -58,7 +58,6 @@ public class ServerThread extends Thread {
     String op = instruction.getOperation();
     String user = instruction.getUser();
     String target = instruction.getTarget();
-    String payload = instruction.getPayload();
     try {
       switch (op) {
         case ("move"):
@@ -105,6 +104,10 @@ public class ServerThread extends Thread {
                       + i.getTarget()
                       + '|'
                       + i.getPayload()
+                      + '|'
+                      + i.getGame()
+                      + '|'
+                      + " "
                       + '\0')
                   .getBytes());
     } catch (IOException e) {

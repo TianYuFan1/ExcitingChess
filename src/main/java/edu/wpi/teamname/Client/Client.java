@@ -131,6 +131,7 @@ public class Client {
                   + "|"
                   + i.getGame()
                   + "|"
+                  + " "
                   + '\0')
               .getBytes());
     } catch (IOException e) {
