@@ -10,6 +10,7 @@ public class Instruction {
   private final String user;
   private final String target;
   private final String payload;
+  private final String game;
 
   public String getOperation() {
     return operation;
@@ -27,11 +28,16 @@ public class Instruction {
     return payload;
   }
 
-  public Instruction(String operation, String user, String target, String payload) {
+  public String getGame() {
+    return game;
+  }
+
+  public Instruction(String operation, String user, String target, String payload, String game) {
     this.operation = operation;
     this.user = user;
     this.target = target;
     this.payload = payload;
+    this.game = game;
   }
 
   /**
@@ -50,7 +56,7 @@ public class Instruction {
           build.append((char) temp);
         }
         String[] content = build.toString().split("\\|");
-        return new Instruction(content[0], content[1], content[2], content[3]);
+        return new Instruction(content[0], content[1], content[2], content[3], content[4]);
       }
     } catch (IOException e) {
       e.printStackTrace();

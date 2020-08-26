@@ -63,7 +63,7 @@ public class ServerThread extends Thread {
       switch (op) {
         case ("move"):
           ServerThread destination = this.server.findUser(target);
-          this.server.saveMove(payload);
+          this.server.saveMove(instruction);
           destination.sendInstruction(instruction);
           break;
         case ("logoff"):

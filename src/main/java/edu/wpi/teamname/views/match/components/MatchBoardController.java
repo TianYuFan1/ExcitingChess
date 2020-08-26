@@ -33,7 +33,7 @@ public class MatchBoardController implements MatchController {
   }
 
   public void initialize() {
-    this.color = "white";
+    this.color = color;
     createBase();
     createPieces();
   }

@@ -14,13 +14,13 @@ import java.util.HashMap;
 public class Server extends Thread {
   private ServerSocket socket;
   private HashMap<String, ServerThread> activeUsers;
-  private ArrayList<String> activeGame;
+  private HashMap<String, Game> activeGames;
   private Database database;
 
   public Server(HashMap<String, ServerThread> activeUsers, ServerSocket socket) {
     this.activeUsers = activeUsers;
     this.socket = socket;
-    this.activeGame = new ArrayList<>();
+    this.activeGames = new HashMap<>();
   }
 
   public ServerSocket getSocket() {
@@ -42,10 +42,10 @@ public class Server extends Thread {
   /**
    * Adds a move to an active game
    *
-   * @param move String move that will be added to the moveList
+   * @param i Instruction Move Instruction
    */
-  public void saveMove(String move) {
-    this.activeGame.add(move);
+  public void saveMove(Instruction i) {
+    activeGames.get(i.getGame()).saveMove(i.getPayload());
   }
 
   /**
@@ -56,10 +56,9 @@ public class Server extends Thread {
   public void processTakeBack(Instruction i) {
     switch (i.getPayload()) {
       case ("accept"):
-        String lastMove = this.activeGame.get(activeGame.size() - 1);
-        this.activeGame.remove(activeGame.size() - 1);
-        String firstMove = this.activeGame.get(activeGame.size() - 1);
-        this.activeGame.remove(activeGame.size() - 1);
+        Game game = lookupGame(i.getGame());
+        String lastMove = game.popMove();
+        String firstMove = game.popMove();
         undoMove(lastMove, firstMove, i);
         break;
       case ("request"):
@@ -92,9 +91,10 @@ public class Server extends Thread {
    * @param i Instruction
    */
   public void undoMove(String last, String first, Instruction i) {
-    ArrayList<String> users = new ArrayList<>(Arrays.asList(i.getUser(), i.getTarget()));
-    Instruction undoLastMove = new Instruction("undo", "", "", last);
-    Instruction undoFirstMove = new Instruction("undo", "", "", first);
+    ArrayList<String> users =
+            new ArrayList<>(Arrays.asList(lookupGame(i.getGame()).getWhite(), lookupGame(i.getGame()).getBlack()));
+    Instruction undoLastMove = new Instruction("undo", "", "", last, i.getGame());
+    Instruction undoFirstMove = new Instruction("undo", "", "", first, i.getGame());
     ArrayList<Instruction> instructions =
         new ArrayList<>(Arrays.asList(undoLastMove, undoFirstMove));
     sendInstructions(users, instructions);
@@ -118,11 +118,12 @@ public class Server extends Thread {
     ServerThread destination = this.activeUsers.get(i.getTarget());
     ServerThread origin = this.activeUsers.get(i.getUser());
     StringBuilder moves = new StringBuilder();
-    for (int count = 0; count < activeGame.size(); count++) {
-      moves.append(activeGame.get(count));
-      moves.append(activeGame.get('*'));
+    ArrayList<String> activeGame = lookupGame(i.getGame()).getMoves();
+    for (String s : activeGame) {
+      moves.append(s);
+      moves.append('*');
     }
-    Instruction instruction = new Instruction("loadgame", "server", "client", moves.toString());
+    Instruction instruction = new Instruction("loadgame", "server", "client", moves.toString(), i.getGame());
     destination.sendInstruction(instruction);
     origin.sendInstruction(instruction);
   }
@@ -133,8 +134,8 @@ public class Server extends Thread {
    * @param i Instruction to be processed
    */
   public void saveGame(Instruction i) {
-    this.database.saveGame(this.activeGame, i);
-    this.activeGame = new ArrayList<>();
+    this.database.saveGame(lookupGame(i.getGame()).getMoves(), i);
+    this.activeGames.remove(i.getGame());
   }
 
   /** Thread which accepts new connections to the server */
@@ -168,6 +169,10 @@ public class Server extends Thread {
       e.printStackTrace();
       return;
     }
+  }
+
+  public Game lookupGame (String id) {
+    return this.activeGames.get(id);
   }
 
   /**

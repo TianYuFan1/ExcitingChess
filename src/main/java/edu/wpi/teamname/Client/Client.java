@@ -33,7 +33,7 @@ public class Client {
       this.username = user;
       this.readIn = socket.getInputStream();
       this.sendOut = socket.getOutputStream();
-      Instruction initialize = new Instruction("initialize", username, "", "");
+      Instruction initialize = new Instruction("initialize", username, "", "", "");
       sendInstruction(initialize);
       receiveMsg();
     } catch (Exception e) {
@@ -128,7 +128,9 @@ public class Client {
                   + i.getTarget()
                   + '|'
                   + i.getPayload()
-                  + " "
+                  + "|"
+                  + i.getGame()
+                  + "|"
                   + '\0')
               .getBytes());
     } catch (IOException e) {
