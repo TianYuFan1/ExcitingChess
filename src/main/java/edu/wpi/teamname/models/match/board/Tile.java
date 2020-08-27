@@ -276,7 +276,7 @@ public class Tile {
     this.mbc
         .getMatchScreenController()
         .getClient()
-        .sendInstruction(new Instruction("move", "", "", move));
+        .sendInstruction(new Instruction("move", "", "", move, this.mbc.getGameID()));
   }
 
   public void removeTileEventListeners() {

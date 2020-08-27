@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 public class Server extends Thread {
   private ServerSocket socket;
+  private ArrayList<String> allUsers;
   private HashMap<String, ServerThread> activeUsers;
   private HashMap<String, Game> activeGames;
   private Database database;
@@ -20,6 +21,7 @@ public class Server extends Thread {
   public Server(HashMap<String, ServerThread> activeUsers, ServerSocket socket) {
     this.activeUsers = activeUsers;
     this.socket = socket;
+    this.allUsers = new ArrayList<>();
     this.activeGames = new HashMap<>();
   }
 
@@ -28,7 +30,17 @@ public class Server extends Thread {
   }
 
   public void addUser(String username, ServerThread clientConnection) {
+    this.allUsers.add(username);
     this.activeUsers.put(username, clientConnection);
+    if (allUsers.size() == 2) {
+      Game game = new Game(this , allUsers.get(0), allUsers.get(1));
+      String id = "test";
+      activeGames.put(id, game);
+      Instruction startGameWhite = new Instruction ("startgame", allUsers.get(0), allUsers.get(1), "white", id);
+      Instruction startGameBlack = new Instruction ("startgame", allUsers.get(1), allUsers.get(0), "black", id);
+      game.getWhiteThread().sendInstruction(startGameWhite);
+      game.getBlackThread().sendInstruction(startGameBlack);
+    }
   }
 
   public void removeUser(String username) {

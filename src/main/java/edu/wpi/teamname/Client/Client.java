@@ -71,6 +71,9 @@ public class Client {
     String target = instruction.getTarget();
     String payload = instruction.getPayload();
     switch (op) {
+      case ("startgame"):
+        startGame(instruction);
+        break;
       case ("move"):
         slideMoveOverKnowWhatImsayin(instruction);
         break;
@@ -147,4 +150,15 @@ public class Client {
   public void slideMoveOverKnowWhatImsayin(Instruction instruction) {
     matchScreenController.getMatchBoardController().getTiles().movePiece(instruction.getPayload());
   }
+
+  public void startGame (Instruction instruction) {
+    this.matchScreenController.getMatchBoardController().setColor(instruction.getPayload());
+    this.matchScreenController.getMatchBoardController().createPieces();
+    this.matchScreenController.getMatchBoardController().setGameID(instruction.getGame());
+  }
+
+  public void requestGame (String username) {
+
+  }
+
 }

@@ -21,8 +21,21 @@ public class MatchBoardController implements MatchController {
 
   private TileGrid tiles;
   private PieceSet pieces;
+  private String gameID;
+
+  public void setGameID(String gameID) {
+    this.gameID = gameID;
+  }
+
+  public void setColor(String color) {
+    this.color = color;
+  }
+
   private String color;
 
+  public String getGameID() {
+    return gameID;
+  }
   @Override
   public void setMatchScreenController(MatchScreenController matchScreenController) {
     this.matchScreenController = matchScreenController;
@@ -33,9 +46,7 @@ public class MatchBoardController implements MatchController {
   }
 
   public void initialize() {
-    this.color = color;
     createBase();
-    createPieces();
   }
 
   private void createBase() {
@@ -54,7 +65,7 @@ public class MatchBoardController implements MatchController {
     System.out.println("");
   }
 
-  private void createPieces() {
+  public void createPieces() {
     pieces = new PieceSet(this.color, this);
   }
 
