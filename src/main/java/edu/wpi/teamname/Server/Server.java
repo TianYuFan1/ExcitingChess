@@ -33,11 +33,13 @@ public class Server extends Thread {
     this.allUsers.add(username);
     this.activeUsers.put(username, clientConnection);
     if (allUsers.size() == 2) {
-      Game game = new Game(this , allUsers.get(0), allUsers.get(1));
+      Game game = new Game(this, allUsers.get(1), allUsers.get(0));
       String id = "test";
       activeGames.put(id, game);
-      Instruction startGameWhite = new Instruction ("startgame", allUsers.get(0), allUsers.get(1), "white", id);
-      Instruction startGameBlack = new Instruction ("startgame", allUsers.get(1), allUsers.get(0), "black", id);
+      Instruction startGameWhite =
+          new Instruction("startgame", allUsers.get(0), allUsers.get(1), "white", id);
+      Instruction startGameBlack =
+          new Instruction("startgame", allUsers.get(1), allUsers.get(0), "black", id);
       game.getWhiteThread().sendInstruction(startGameWhite);
       game.getBlackThread().sendInstruction(startGameBlack);
     }
@@ -104,7 +106,8 @@ public class Server extends Thread {
    */
   public void undoMove(String last, String first, Instruction i) {
     ArrayList<String> users =
-            new ArrayList<>(Arrays.asList(lookupGame(i.getGame()).getWhite(), lookupGame(i.getGame()).getBlack()));
+        new ArrayList<>(
+            Arrays.asList(lookupGame(i.getGame()).getWhite(), lookupGame(i.getGame()).getBlack()));
     Instruction undoLastMove = new Instruction("undo", "", "", last, i.getGame());
     Instruction undoFirstMove = new Instruction("undo", "", "", first, i.getGame());
     ArrayList<Instruction> instructions =
@@ -135,7 +138,8 @@ public class Server extends Thread {
       moves.append(s);
       moves.append('*');
     }
-    Instruction instruction = new Instruction("loadgame", "server", "client", moves.toString(), i.getGame());
+    Instruction instruction =
+        new Instruction("loadgame", "server", "client", moves.toString(), i.getGame());
     destination.sendInstruction(instruction);
     origin.sendInstruction(instruction);
   }
@@ -183,7 +187,7 @@ public class Server extends Thread {
     }
   }
 
-  public Game lookupGame (String id) {
+  public Game lookupGame(String id) {
     return this.activeGames.get(id);
   }
 

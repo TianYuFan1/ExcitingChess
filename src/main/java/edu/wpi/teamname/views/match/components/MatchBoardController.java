@@ -36,6 +36,7 @@ public class MatchBoardController implements MatchController {
   public String getGameID() {
     return gameID;
   }
+
   @Override
   public void setMatchScreenController(MatchScreenController matchScreenController) {
     this.matchScreenController = matchScreenController;
@@ -45,11 +46,9 @@ public class MatchBoardController implements MatchController {
     return matchScreenController;
   }
 
-  public void initialize() {
-    createBase();
-  }
+  public void initialize() {}
 
-  private void createBase() {
+  public void createBase() {
     tiles = new TileGrid(this);
     for (int col = 0; col < 8; col++) {
       for (int row = 0; row < 8; row++) {
@@ -60,6 +59,7 @@ public class MatchBoardController implements MatchController {
       if (i % 8 == 0) {
         System.out.println("");
       }
+      // TODO Labelling on board may be probably wack
       System.out.print(tiles.getTile(i).getAbsPos() + " ");
     }
     System.out.println("");

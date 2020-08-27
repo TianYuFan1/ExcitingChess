@@ -151,14 +151,12 @@ public class Client {
     matchScreenController.getMatchBoardController().getTiles().movePiece(instruction.getPayload());
   }
 
-  public void startGame (Instruction instruction) {
+  public void startGame(Instruction instruction) {
     this.matchScreenController.getMatchBoardController().setColor(instruction.getPayload());
+    this.matchScreenController.getMatchBoardController().createBase();
     this.matchScreenController.getMatchBoardController().createPieces();
     this.matchScreenController.getMatchBoardController().setGameID(instruction.getGame());
   }
 
-  public void requestGame (String username) {
-
-  }
-
+  public void requestGame(String username) {}
 }
